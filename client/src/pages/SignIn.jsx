@@ -149,7 +149,10 @@ const SignIn = () => {
           placeholder="username"
           onChange={(e) => setName(e.target.value)}
         />
-        <Input placeholder="email" onChange={(e) => setEmail(e.target.value)} />
+        <Input 
+          placeholder="email" 
+          onChange={(e) => setEmail(e.target.value)} 
+        />
         <Input
           type="password"
           placeholder="password"
