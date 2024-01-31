@@ -1,15 +1,30 @@
 import User from "../models/User.js";
 import Video from "../models/Video.js";
 import { createError } from "../error.js";
+import multer from 'multer';
+
+// Set up multer to store uploaded files in the 'uploads' directory
+const upload = multer({ dest: 'uploads/' });
 
 export const addVideo = async (req, res, next) => {
-  const newVideo = new Video({ userId: req.user.id, ...req.body });
-  try {
-    const savedVideo = await newVideo.save();
-    res.status(200).json(savedVideo);
-  } catch (err) {
-    next(err);
-  }
+  upload.single('video')(req, res, async (err) => {
+    if (err) {
+      return next(err);
+    }
+
+    const newVideo = new Video({
+      userId: req.user.id,
+      videoPath: req.file.path, // The path of the uploaded video
+      ...req.body
+    });
+
+    try {
+      const savedVideo = await newVideo.save();
+      res.status(200).json(savedVideo);
+    } catch (err) {
+      next(err);
+    }
+  });
 };
 
 export const updateVideo = async (req, res, next) => {
